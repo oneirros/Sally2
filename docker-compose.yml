@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  api:
+    container_name: 'sally_api'
+    build: ./
+    ports:
+    - '5002:5002'
+    depends_on:
+      - database
+
+  database:
+    container_name: 'sally2_db_container'
+    image: postgres
+    ports:
+    - '5432:5432'
+    environment:
+      - POSTGRES_DB=sally2_db
+      - POSTGRES_USER=adminadmin
+      - POSTGRES_PASSWORD=adminadmin
+
+
