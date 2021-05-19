@@ -5,27 +5,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//import javax.persistence.*;
+import javax.persistence.*;
+import java.time.LocalDate;
 
-@Data
-//@Entity(name = "user")
+
+@Data // Setery, Getery, ToString itp
+@Table(name = "users")
+@Entity
 @Builder // Tworzenie nowej instancji
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
 
-//    @Id
-//    @SequenceGenerator(
-//            name = "userSequence",
-//            sequenceName = "userSequence",
-//            allocationSize = 1
-//    )
-//    @GeneratedValue(
-//            strategy = GenerationType.SEQUENCE,
-//            generator = "userSequence"
-//    )
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "details_id", referencedColumnName = "id")
+    private UserDetails userDetails;
+    private UserRole role;
     private String email;
-
-
+    private String login;
+    private String password;
+    private LocalDate createdOn;
 }
