@@ -2,21 +2,23 @@ version: '3'
 
 services:
   api:
-    container_name: 'sally_api'
+    container_name: 'sally2_api'
     build: ./
     ports:
     - '5002:5002'
     depends_on:
-      - database
+      - postgres_db
+    restart: always
 
-  database:
-    container_name: 'sally2_db_container'
+  postgres_db:
+    container_name: 'postgres_db'
     image: postgres
     ports:
     - '5432:5432'
     environment:
-      - POSTGRES_DB=sally2_db
-      - POSTGRES_USER=adminadmin
-      - POSTGRES_PASSWORD=adminadmin
+      POSTGRES_DB: sally2_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
 
 
