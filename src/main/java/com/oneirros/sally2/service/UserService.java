@@ -2,7 +2,9 @@ package com.oneirros.sally2.service;
 
 import com.oneirros.sally2.entity.UserDetails;
 import com.oneirros.sally2.entity.UserEntity;
+import com.oneirros.sally2.exception.SamePasswordException;
 import com.oneirros.sally2.payload.AddUserRequest;
+import com.oneirros.sally2.payload.ChangeUserPasswordRequest;
 import com.oneirros.sally2.payload.UserResponse;
 import com.oneirros.sally2.repository.UserRepository;
 import javassist.NotFoundException;
@@ -24,7 +26,7 @@ public class UserService {
 
     public UserResponse getUser(@NonNull Long userId) throws NotFoundException {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("Not found user ID = " + userId)
+                () -> new NotFoundException(String.format("Not found user ID = %d", userId))
         );
 
         return UserResponse.of(userEntity);
@@ -34,7 +36,7 @@ public class UserService {
 
         boolean exist = userRepository.existsByEmail(userRequest.getEmail());
         if (exist) {
-            throw new IllegalArgumentException("Email " + userRequest.getEmail() + " taken");
+            throw new IllegalArgumentException(String.format("Email %s taken", userRequest.getEmail()));
         }
 
         UserDetails details = UserDetails.builder()
@@ -53,5 +55,28 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+    }
+
+    public void updateUserPassword(Long userID, ChangeUserPasswordRequest request)
+            throws NotFoundException, SamePasswordException {
+
+        UserEntity user = userRepository.findById(userID)
+                .orElseThrow(() -> new NotFoundException(String.format("Not found user of ID = %d", userID)));
+
+        if (!request.getPassword().equals(user.getPassword())) {
+            user.setPassword(request.getPassword());
+            userRepository.save(user);
+        } else {
+            throw new SamePasswordException("Password is the same as the previous");
+        }
+
+    }
+
+    public void deleteUser(Long userID) throws NotFoundException {
+
+        UserEntity user = userRepository.findById(userID)
+                .orElseThrow(() -> new NotFoundException(String.format("Not found user of ID = %d", userID)));
+
+        userRepository.deleteById(userID);
     }
 }
