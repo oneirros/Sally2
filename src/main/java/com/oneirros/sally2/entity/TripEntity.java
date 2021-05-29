@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class TripEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

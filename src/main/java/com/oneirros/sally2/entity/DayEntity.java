@@ -6,20 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
-@Data
 @Entity
-@Table(name = "userDetails")
+@Data
 @Builder
-@NoArgsConstructor
+@Table(name = "days")
 @AllArgsConstructor
-public class UserDetails {
+@NoArgsConstructor
+public class DayEntity {
 
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private String surname;
-    private String phone;
 
+    @ManyToOne
+    private TripEntity trip;
+
+    @ManyToOne
+    private UserEntity user;
+    private LocalDate date;
+    private LocalDate createdOn;
 }

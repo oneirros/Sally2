@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private long id;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id", referencedColumnName = "id")
