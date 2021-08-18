@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class TripResponse {
 
     private final Long id;
-    private final UserEntity user;
+    private final Long userId;
     private final String name;
     private final LocalDate createdOn;
 
@@ -18,7 +18,7 @@ public class TripResponse {
 
         return new TripResponse(
                 trip.getId(),
-                trip.getUser(),
+                trip.getUser().getId(),
                 trip.getName(),
                 trip.getCreatedOn()
         );
