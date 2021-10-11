@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/day")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DayController {
 
     private final DayService dayService;
@@ -52,7 +53,7 @@ public class DayController {
     @GetMapping("/allDays/{tripId}")
     public Page<DayResponse> getAllDaysForTrip(@PathVariable("tripId") Long tripId,
                                                @RequestParam(defaultValue = "0") Integer page,
-                                               @RequestParam(defaultValue = "2") Integer size) {
+                                               @RequestParam(defaultValue = "10") Integer size) {
         try {
             return dayService.getAllDaysForTrip(tripId, page, size);
         }
@@ -62,10 +63,11 @@ public class DayController {
     }
 
     @PatchMapping("/{dayId}")
-    public void updateDate(@PathVariable("dayId") Long dayId, @RequestBody @Valid ChangeDayDateRequest request) {
+    public boolean updateDate(@PathVariable("dayId") Long dayId, @RequestBody @Valid ChangeDayDateRequest request) {
 
         try {
             dayService.updateDate(dayId, request);
+            return true;
         }
         catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
