@@ -10,6 +10,7 @@ import com.oneirros.sally2.repository.UserRepository;
 import javassist.NotFoundException;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,10 +19,12 @@ import java.time.LocalDate;
 public class UserService {
 
     public final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse getUser(@NonNull Long userId) throws NotFoundException {
@@ -39,6 +42,7 @@ public class UserService {
             throw new IllegalArgumentException(String.format("Email %s taken", userRequest.getEmail()));
         }
 
+        //zaciągnąc
         UserDetails details = UserDetails.builder()
                 .name(userRequest.getUserDetailsRequest().getName())
                 .surname(userRequest.getUserDetailsRequest().getSurname())
@@ -50,7 +54,7 @@ public class UserService {
                 .role(userRequest.getRole())
                 .email(userRequest.getEmail())
                 .login(userRequest.getLogin())
-                .password(userRequest.getPassword())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .createdOn(LocalDate.now())
                 .build();
 
